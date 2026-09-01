@@ -1,0 +1,8 @@
+borrowers: 30600 raw -> 11015 golden (dropped 19585 dupes, kept latest updated_at per borrower_id)
+accounts: 30000 raw -> 30000 golden
+agents: 30000 raw rows -> 1000 unique agents (golden dim, latest snapshot kept). NOTE: employee_code has 1099 unique values vs 1000 agent_ids -> some agents were re-issued employee codes; agent_id is used as the single source of truth identity key, NOT employee_code or agent_name.
+payments: 25500 raw -> 25014 after removing 486 exact duplicate rows -> 15350 unique successful payments after ref-dedup (removed 2195 retry-duplicates). Total golden dataset rows (all statuses): 22819
+REVERSED payments: 1255 rows totalling 94,674,481 -- these are netted OUT of recovery (treated as recovery reduction), since a reversed payment is not durable recovery.
+GOLDEN net recovery = SUCCESS (1,149,909,180) - REVERSED (94,674,481) = 1,055,234,699
+vs NAIVE reported-style recovery (raw SUCCESS sum, no cleaning) = 1,341,485,926
+Cleaning removed 286,251,227 = 21.3% of naive recovery
